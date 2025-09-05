@@ -10,12 +10,12 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      BASE_URL: ${BASE_URL}
+      BASE_URL: http://15.204.240.98:8081   # tell Ghostfolio its real public URL
     depends_on:
       - db
       - redis
     ports:
-      - "8081:3333"  
+      - "8081:3333"   # hostPort:containerPort
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3333"]
       interval: 20s
@@ -41,4 +41,5 @@ services:
 volumes:
   db_data:
   redis_data:
+
 
