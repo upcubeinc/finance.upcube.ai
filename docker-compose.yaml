@@ -10,12 +10,13 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      BASE_URL: http://15.204.240.98:8081
+      BASE_URL: ${BASE_URL}
+      ACCESS_TOKEN_SALT: ${ACCESS_TOKEN_SALT}
     depends_on:
       - db
       - redis
     ports:
-      - "8081:3333"
+      - "8081:3333"  
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3333"]
       interval: 20s
@@ -41,6 +42,7 @@ services:
 volumes:
   db_data:
   redis_data:
+
 
 
 
