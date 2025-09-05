@@ -1,39 +1,32 @@
-version: "3.9"
+db:
+  image: postgres:15
+  restart: unless-stopped
+  environment:
+    POSTGRES_USER: ghostfolio
+    POSTGRES_PASSWORD: Homocide1
+    POSTGRES_DB: ghostfolio
+  volumes:
+    - db_data:/var/lib/postgresql/data
 
-services:
-  db:
-    image: postgres:15
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ghostfolio
-      POSTGRES_PASSWORD: Homocide1
-      POSTGRES_DB: ghostfolio
-    volumes:
-      - db_data:/var/lib/postgresql/data
+redis:
+  image: redis:7
+  restart: unless-stopped
+  command: ["redis-server", "--requirepass", "Homocide1"]
+  volumes:
+    - redis_data:/data
 
-  redis:
-    image: redis:7
-    restart: unless-stopped
-    command: ["redis-server", "--requirepass", "Homocide1"]
-    volumes:
-      - redis_data:/data
-
-  ghostfolio:
-    image: ghostfolio/ghostfolio:latest
-    restart: unless-stopped
-    depends_on:
-      - db
-      - redis
-    environment:
-      DATABASE_URL: postgresql://ghostfolio:Homocide1@db:5432/ghostfolio
-      REDIS_URL: redis://:Homocide1@redis:6379
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      ACCESS_TOKEN_SALT: ${ACCESS_TOKEN_SALT}
-      BASE_URL: https://finance.upcube.ai
-      NODE_ENV: production
-      HOST: 0.0.0.0
-      PORT: 3333
-
-volumes:
-  db_data:
-  redis_data:
+ghostfolio:
+  image: ghostfolio/ghostfolio:latest
+  restart: unless-stopped
+  depends_on:
+    - db
+    - redis
+  environment:
+    DATABASE_URL: postgresql://ghostfolio:Homocide1@db:5432/ghostfolio
+    REDIS_URL: redis://:Homocide1@redis:6379
+    JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    ACCESS_TOKEN_SALT: ${ACCESS_TOKEN_SALT}
+    BASE_URL: https://finance.upcube.ai
+    NODE_ENV: production
+    HOST: 0.0.0.0
+    PORT: 3333
